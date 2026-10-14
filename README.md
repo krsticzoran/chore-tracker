@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chore Tracker
 
-## Getting Started
+A small web app that helps a parent and child build a habit of doing household chores.
 
-First, run the development server:
+The parent creates recurring chores tied to days of the week (e.g. *Saturday: vacuum the room*, *Sunday: change the bed sheets*). The child logs in each day, sees today's chores and checks them off. The parent sees a history of what was done and when.
+
+> 🚧 Work in progress. Built as a learning project for Supabase (auth, Postgres, Row Level Security).
+
+## Tech stack
+
+- [Next.js](https://nextjs.org) (App Router) + TypeScript
+- [Tailwind CSS](https://tailwindcss.com)
+- [Supabase](https://supabase.com): authentication, Postgres, Row Level Security
+- [Vercel](https://vercel.com) for hosting
+- PWA, installable on a phone's home screen
+
+## Data model (draft)
+
+| Table         | Purpose                                                        |
+| ------------- | -------------------------------------------------------------- |
+| `profiles`    | User id and role (`parent` or `child`)                         |
+| `tasks`       | Title, `weekdays` (`int[]`, e.g. `[6]` = Saturday), `active`   |
+| `completions` | `task_id`, date, `completed_at`, optional parent approval      |
+
+### Access rules (RLS)
+
+- **Child:** can read tasks; can create and read their own completions.
+- **Parent:** can create and edit tasks; can see all completions.
+
+Permissions are enforced in the database with Row Level Security, not only in the UI.
+
+## Roadmap
+
+**MVP**
+- [ ] Login
+- [ ] Parent creates chores per weekday
+- [ ] Child sees today's chores and checks them off
+- [ ] Parent sees completion history
+
+**Extras**
+- [ ] Parent approval ("really done?")
+- [ ] Streaks / points
+- [ ] Push reminders via PWA
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Supabase environment variables will be documented here once the integration is in place.
